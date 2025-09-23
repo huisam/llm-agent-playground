@@ -19,21 +19,20 @@ class WebSearchPlan(BaseModel):
     searches: list[WebSearchItem] = Field(description="A list of web searches to perform to best answer the query")
 
 
-async def plan(query: str) -> str:
+async def plan(query: str) -> WebSearchPlan:
     agent = Agent(
         name="Planner agent",
         instructions="""
             You are a helpful research assistant. Your job is to help me find information about a topic.
-            Output 3 terms to query for.
+            Output 2 terms to query for.
         """,
         model="gpt-4.1",
         output_type=WebSearchPlan
     )
 
-    with trace("Planner agent"):
-        response = await Runner.run(agent, query)
-        logger.info(response.final_output)
-        return response.final_output
+    response = await Runner.run(agent, query)
+    logger.info(response.final_output)
+    return response.final_output
 
 
 if __name__ == '__main__':
