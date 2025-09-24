@@ -1,14 +1,15 @@
 import asyncio
+import logging
 import os
 
-from agents import Agent, trace, Runner
+from agents import Agent, Runner
 from agents.mcp import MCPServerStdio, MCPServerStdioParams
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-from log.logger import get_logger
+from log.logger import configure_logger
 
-logger = get_logger()
+logger = logging.getLogger(__name__)
 load_dotenv(override=True)
 
 
@@ -27,14 +28,15 @@ async def research(query: str) -> ResearchReport:
                 You are a senior researcher tasked with writing a cohesive report for a research query.
                 You will be provided original query, ann return the following data output.
                 """,
-            model="gpt-4o-mini",
+            model="gpt-5-nano",
             mcp_servers=[server],
-            output_type=ResearchReport
+            output_type=ResearchReport,
         )
-        result = await Runner.run(agent, query)
+        result = await Runner.run(agent, query, max_turns=3)
         logger.info(result.final_output)
         return result.final_output
 
 
 if __name__ == '__main__':
+    configure_logger()
     asyncio.run(research("Due to 2025 year, What is the best model for agentic AI frontier model?"))

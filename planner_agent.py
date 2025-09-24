@@ -1,13 +1,14 @@
 import asyncio
+import logging
 
 from agents import Agent, Runner, trace
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-from log.logger import get_logger
+from log.logger import configure_logger
 
 load_dotenv(override=True)
-logger = get_logger()
+logger = logging.getLogger(__name__)
 
 
 class WebSearchItem(BaseModel):
@@ -24,9 +25,9 @@ async def plan(query: str) -> WebSearchPlan:
         name="Planner agent",
         instructions="""
             You are a helpful research assistant. Your job is to help me find information about a topic.
-            Output 2 terms to query for.
+            Output 1 terms to query for.
         """,
-        model="gpt-4.1",
+        model="gpt-5-mini",
         output_type=WebSearchPlan
     )
 
@@ -36,4 +37,5 @@ async def plan(query: str) -> WebSearchPlan:
 
 
 if __name__ == '__main__':
+    configure_logger()
     asyncio.run(plan("Due to 2025 year, What is the best model for agentic AI frontier model?"))
