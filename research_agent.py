@@ -4,13 +4,11 @@ import os
 
 from agents import Agent, Runner
 from agents.mcp import MCPServerStdio, MCPServerStdioParams
-from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 
-from log.logger import configure_logger
+from configuration import configure
 
 logger = logging.getLogger(__name__)
-load_dotenv(override=True)
 
 
 class ResearchReport(BaseModel):
@@ -33,10 +31,10 @@ async def research(query: str) -> ResearchReport:
             output_type=ResearchReport,
         )
         result = await Runner.run(agent, query, max_turns=3)
-        logger.info(result.final_output)
+        logger.info(result.final_output.model_dump_json())
         return result.final_output
 
 
 if __name__ == '__main__':
-    configure_logger()
+    configure()
     asyncio.run(research("Due to 2025 year, What is the best model for agentic AI frontier model?"))

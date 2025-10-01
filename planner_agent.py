@@ -1,14 +1,12 @@
 import asyncio
 import logging
 
-from agents import Agent, Runner, trace, ModelSettings
-from dotenv import load_dotenv
+from agents import Agent, Runner, ModelSettings
 from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
-from log.logger import configure_logger
+from configuration import configure
 
-load_dotenv(override=True)
 logger = logging.getLogger(__name__)
 
 
@@ -29,7 +27,7 @@ async def plan(query: str) -> WebSearchPlan:
             Output 2 terms to query for.
         """,
         model="gpt-5-mini",
-        model_settings=ModelSettings(reasoning=Reasoning(effort="high")),
+        model_settings=ModelSettings(reasoning=Reasoning(effort="low")),
         output_type=WebSearchPlan
     )
 
@@ -40,5 +38,5 @@ async def plan(query: str) -> WebSearchPlan:
 
 
 if __name__ == '__main__':
-    configure_logger()
+    configure()
     asyncio.run(plan("Due to 2025 year, What is the best model for agentic AI frontier model?"))
