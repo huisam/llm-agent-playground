@@ -6,7 +6,7 @@ from agents import Agent, Runner
 from agents.mcp import MCPServerStdio, MCPServerStdioParams
 from pydantic import BaseModel, Field
 
-from configuration import configure
+from configuration.configuration import configure_all
 
 logger = logging.getLogger(__name__)
 
@@ -36,5 +36,5 @@ async def research(query: str) -> ResearchReport:
 
 
 if __name__ == '__main__':
-    configure()
+    configure_all()
     asyncio.run(research("Due to 2025 year, What is the best model for agentic AI frontier model?"))

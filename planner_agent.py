@@ -5,7 +5,7 @@ from agents import Agent, Runner, ModelSettings
 from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
-from configuration import configure
+from configuration.configuration import configure_all
 
 logger = logging.getLogger(__name__)
 
@@ -38,5 +38,5 @@ async def plan(query: str) -> WebSearchPlan:
 
 
 if __name__ == '__main__':
-    configure()
+    configure_all()
     asyncio.run(plan("Due to 2025 year, What is the best model for agentic AI frontier model?"))
