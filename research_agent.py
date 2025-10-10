@@ -16,7 +16,7 @@ class ResearchReport(BaseModel):
     markdown_report: str = Field(description="The final report")
 
 
-async def research(query: str) -> ResearchReport:
+async def research(query: str, feedback: str | None = None) -> ResearchReport:
     params = MCPServerStdioParams(command="uvx", args=["serper-mcp-server"],
                                   env={"SERPER_API_KEY": os.getenv("SERPER_API_KEY")})
     async with MCPServerStdio(params=params, client_session_timeout_seconds=30) as server:
@@ -30,7 +30,7 @@ async def research(query: str) -> ResearchReport:
             mcp_servers=[server],
             output_type=ResearchReport,
         )
-        result = await Runner.run(agent, query, max_turns=3)
+        result = await Runner.run(agent, f"query: {query}\n feedback: {feedback}", max_turns=3)
         logger.info(result.final_output.model_dump_json())
         return result.final_output
 

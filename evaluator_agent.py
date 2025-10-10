@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import Optional
 
 from agents import Agent, Runner
 from pydantic import BaseModel
@@ -13,6 +14,7 @@ class EvaluateResult(BaseModel):
     passed: bool
     result: str
     reasoning: str
+    feedback: Optional[str]
 
 
 async def evaluate(markdown_report: str) -> EvaluateResult:
@@ -23,7 +25,9 @@ async def evaluate(markdown_report: str) -> EvaluateResult:
             Check whether the report has a clear introduction, methodology, findings, and conclusion.
             Assess the logical flow of sections and whether arguments are well connected.
             Identify ambiguous or confusing statements.
+            
             Provide the result is passed or not, and give me the result in 2~3 sentence and write about the reason to reasoning
+            If the result is not passed give the feedback.
             """,
         output_type=EvaluateResult,
         model="gpt-5-mini"
