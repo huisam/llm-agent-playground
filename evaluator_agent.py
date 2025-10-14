@@ -2,7 +2,8 @@ import asyncio
 import logging
 from typing import Optional
 
-from agents import Agent, Runner
+from agents import Agent, Runner, ModelSettings
+from openai.types import Reasoning
 from pydantic import BaseModel
 
 from configuration.configuration import configure_all
@@ -20,7 +21,7 @@ class EvaluateResult(BaseModel):
 async def evaluate(markdown_report: str) -> EvaluateResult:
     agent = Agent(
         name="Evaluate Agent",
-        instructions="""
+        instructions=f"""
             You are a expert evaluator to evaluate the markdown report text. 
             Check whether the report has a clear introduction, methodology, findings, and conclusion.
             Assess the logical flow of sections and whether arguments are well connected.
@@ -30,7 +31,8 @@ async def evaluate(markdown_report: str) -> EvaluateResult:
             If the result is not passed give the feedback.
             """,
         output_type=EvaluateResult,
-        model="gpt-5-mini"
+        model="gpt-5-mini",
+        model_settings=ModelSettings(reasoning=Reasoning(effort="low")),
     )
     result = await Runner.run(agent, markdown_report)
     logger.info(result.final_output.model_dump_json())

@@ -27,7 +27,7 @@ async def plan(query: str) -> WebSearchPlan:
             Output 2 terms to query for.
         """,
         model="gpt-5-mini",
-        model_settings=ModelSettings(reasoning=Reasoning(effort="low")),
+        model_settings=ModelSettings(reasoning=Reasoning(effort="high")),
         output_type=WebSearchPlan
     )
 

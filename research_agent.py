@@ -2,8 +2,9 @@ import asyncio
 import logging
 import os
 
-from agents import Agent, Runner
+from agents import Agent, Runner, ModelSettings
 from agents.mcp import MCPServerStdio, MCPServerStdioParams
+from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
 from configuration.configuration import configure_all
@@ -27,6 +28,7 @@ async def research(query: str, feedback: str | None = None) -> ResearchReport:
                 You will be provided original query, ann return the following data output.
                 """,
             model="gpt-5-nano",
+            model_settings=ModelSettings(reasoning=Reasoning(effort="low")),
             mcp_servers=[server],
             output_type=ResearchReport,
         )
