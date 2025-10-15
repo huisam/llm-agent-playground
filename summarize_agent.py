@@ -12,28 +12,36 @@ logger = logging.getLogger(__name__)
 
 
 async def summarize(title: str, reports: list[str]) -> str:
+    async with create_summarize_mcp_server() as server:
+        agent = create_summarize_agent(server)
+        result = await Runner.run(agent, f"title: {title}\n reports: " + "\n\n".join(reports))
+        logger.info(f"Result of the summarization: {result.final_output}")
+        return result.final_output
+
+
+def create_summarize_mcp_server() -> MCPServerStdio:
     params = MCPServerStdioParams(
         command="npx",
         args=["-y", "@modelcontextprotocol/server-filesystem", f"{os.getcwd()}"],
     )
-    async with MCPServerStdio(params=params, client_session_timeout_seconds=30) as server:
-        agent = Agent(
-            name="Summarize agent",
-            instructions=f"""
-                    You are a summarizer that given report to summarize to markdown.
-                    Write a markdown file to the `report` directory with `{title}.md` as the file name.
-                    The file should be in korean language.
-                    
-                    Only write a file with no response message content.
-                    """,
-            model="gpt-5-nano",
-            model_settings=ModelSettings(reasoning=Reasoning(effort="minimal")),
+    return MCPServerStdio(params=params, client_session_timeout_seconds=30)
 
-            mcp_servers=[server],
-        )
-        result = await Runner.run(agent, "\n\n".join(reports))
-        logger.info(f"Result of the summarization: {result.final_output}")
-        return result.final_output
+
+def create_summarize_agent(server: MCPServerStdio) -> Agent:
+    return Agent(
+        name="Summarize agent",
+        instructions="""
+            You are a summarizer that given report to summarize to markdown and korean language.
+            
+            1. Create a markdown file to the `report` directory and the file name is `{title}.md`.
+            2. The file content has to fill by your summarize result.
+            
+            Respond only the file path.
+        """,
+        model="gpt-5-nano",
+        model_settings=ModelSettings(reasoning=Reasoning(effort="medium")),
+        mcp_servers=[server],
+    )
 
 
 if __name__ == '__main__':

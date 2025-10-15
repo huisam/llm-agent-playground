@@ -18,8 +18,8 @@ class EvaluateResult(BaseModel):
     feedback: Optional[str]
 
 
-async def evaluate(markdown_report: str) -> EvaluateResult:
-    agent = Agent(
+def create_evaluate_agent() -> Agent:
+    return Agent(
         name="Evaluate Agent",
         instructions=f"""
             You are a expert evaluator to evaluate the markdown report text. 
@@ -34,6 +34,10 @@ async def evaluate(markdown_report: str) -> EvaluateResult:
         model="gpt-5-mini",
         model_settings=ModelSettings(reasoning=Reasoning(effort="low")),
     )
+
+
+async def evaluate(markdown_report: str) -> EvaluateResult:
+    agent = create_evaluate_agent()
     result = await Runner.run(agent, markdown_report)
     logger.info(result.final_output.model_dump_json())
     return result.final_output
