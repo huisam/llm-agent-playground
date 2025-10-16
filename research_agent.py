@@ -20,7 +20,7 @@ class ResearchReport(BaseModel):
 def create_research_mcp_server() -> MCPServerStdio:
     params = MCPServerStdioParams(command="uvx", args=["serper-mcp-server"],
                                   env={"SERPER_API_KEY": os.getenv("SERPER_API_KEY")})
-    return MCPServerStdio(params=params, client_session_timeout_seconds=30)
+    return MCPServerStdio(params=params, name="serper mcp server", client_session_timeout_seconds=30)
 
 
 def create_research_agent(server: MCPServerStdio) -> Agent:

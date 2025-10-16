@@ -24,7 +24,7 @@ def create_summarize_mcp_server() -> MCPServerStdio:
         command="npx",
         args=["-y", "@modelcontextprotocol/server-filesystem", f"{os.getcwd()}"],
     )
-    return MCPServerStdio(params=params, client_session_timeout_seconds=30)
+    return MCPServerStdio(params=params, name="file system mcp server", client_session_timeout_seconds=30)
 
 
 def create_summarize_agent(server: MCPServerStdio) -> Agent:
