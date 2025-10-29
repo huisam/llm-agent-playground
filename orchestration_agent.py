@@ -6,7 +6,6 @@ from agents import Agent, trace, Runner, ModelSettings
 from openai.types import Reasoning
 
 from configuration.configuration import configure_all
-from evaluator_agent import create_evaluate_agent
 from planner_agent import create_planner_agent
 from research_agent import create_research_mcp_server, create_research_agent
 from summarize_agent import create_summarize_mcp_server, create_summarize_agent
