@@ -6,6 +6,7 @@ from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
 from configuration.configuration import configure_all
+from guardrail_agent import research_guardrail
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,7 @@ def create_planner_agent() -> Agent:
         """,
         model="gpt-5-mini",
         model_settings=ModelSettings(reasoning=Reasoning(effort="high")),
+        input_guardrails=[research_guardrail],
         output_type=WebSearchPlan
     )
 
