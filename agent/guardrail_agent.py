@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 
 class ResearchWorkOutput(BaseModel):
-    is_not_research_work: bool = Field(description="Whether or not the query requires research work")
+    is_research_work: bool = Field(description="Whether or not the query requires research work")
 
 
 def create_guardrail_agent() -> Agent:
@@ -27,7 +27,7 @@ async def research_guardrail(
 
     return GuardrailFunctionOutput(
         output_info=result.final_output,
-        tripwire_triggered=result.final_output.is_not_research_work,
+        tripwire_triggered=not result.final_output.is_research_work,
     )
 
 
