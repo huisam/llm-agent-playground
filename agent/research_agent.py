@@ -39,7 +39,7 @@ def create_research_agent(server: MCPServerStdio) -> Agent:
 
 async def research(query: str, feedback: str | None = None) -> ResearchReport:
     async with create_research_mcp_server() as server:
-        agent = await create_research_agent(server)
+        agent = create_research_agent(server)
         result = await Runner.run(agent, f"query: {query}\n feedback: {feedback}", max_turns=3)
         logger.info(result.final_output.model_dump_json())
         return result.final_output

@@ -5,10 +5,9 @@ from contextlib import AsyncExitStack
 from agents import Agent, trace, Runner, ModelSettings
 from openai.types import Reasoning
 
-from configuration.configuration import configure_all
-from planner_agent import create_planner_agent
-from research_agent import create_research_mcp_server, create_research_agent
-from summarize_agent import create_summarize_mcp_server, create_summarize_agent
+from agent import create_research_mcp_server, create_summarize_mcp_server, create_planner_agent, create_research_agent, \
+    create_summarize_agent
+from configuration import configure_all
 
 logger = logging.getLogger(__name__)
 
