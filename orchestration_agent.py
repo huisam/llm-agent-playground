@@ -5,7 +5,7 @@ from contextlib import AsyncExitStack
 from agents import Agent, trace, Runner, ModelSettings
 from openai.types import Reasoning
 
-from agent import create_research_mcp_server, create_summarize_mcp_server, create_planner_agent, create_research_agent, \
+from openai_agents import create_research_mcp_server, create_summarize_mcp_server, create_planner_agent, create_research_agent, \
     create_summarize_agent, create_guardrail_agent
 from configuration import configure_all
 
