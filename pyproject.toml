@@ -7,7 +7,9 @@ requires-python = ">=3.13"
 dependencies = [
     "google-adk>=1.18.0",
     "httpx>=0.28.1",
+    "litellm>=1.79.3",
     "mcp[cli]>=1.20.0",
     "openai-agents>=0.4.2",
+    "opik>=1.8.68",
     "python-dotenv>=1.2.1",
 ]
