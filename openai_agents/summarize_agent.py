@@ -2,9 +2,9 @@ import asyncio
 import logging
 import os
 
-from agents import Agent, Runner, ModelSettings, OpenAIChatCompletionsModel
+from agents import Agent, Runner, ModelSettings
 from agents.mcp import MCPServerStdioParams, MCPServerStdio
-from openai import AsyncOpenAI
+from openai.types import Reasoning
 
 from configuration.configuration import configure_all
 
@@ -38,12 +38,8 @@ def create_summarize_agent(server: MCPServerStdio) -> Agent:
             
             Respond only the file path.
         """,
-        model=OpenAIChatCompletionsModel(
-            model="gemini-2.5-flash",
-            openai_client=AsyncOpenAI(api_key=os.getenv("GOOGLE_API_KEY"),
-                                      base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
-        ),
-        model_settings=ModelSettings(include_usage=True),
+        model="gpt-5-nano",
+        model_settings=ModelSettings(reasoning=Reasoning(effort="medium")),
         mcp_servers=[server],
     )
 
