@@ -3,7 +3,7 @@ import logging
 import os
 
 from google.adk.agents import LlmAgent
-from google.adk.models.lite_llm import LiteLlm
+from google.adk.models import Gemini
 from google.adk.tools import McpToolset
 from google.adk.tools.mcp_tool import StdioConnectionParams
 from mcp import StdioServerParameters
@@ -41,7 +41,7 @@ def create_research_agent() -> LlmAgent:
                 You are a senior researcher tasked with writing a cohesive report for a research query.
                 You will be provided original query, and return the following data output.
                 """,
-        model=LiteLlm(model="openai/gpt-5-nano"),
+        model=Gemini(model="gemini-2.5-flash"),
         tools=[research_mcp_server_tool],
         output_schema=ResearchReport,
         output_key="research_report"

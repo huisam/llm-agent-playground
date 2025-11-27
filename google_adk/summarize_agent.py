@@ -3,7 +3,7 @@ import logging
 import os
 
 from google.adk.agents import LlmAgent
-from google.adk.models.lite_llm import LiteLlm
+from google.adk.models import Gemini
 from google.adk.tools import McpToolset
 from google.adk.tools.mcp_tool import StdioConnectionParams
 from mcp import StdioServerParameters
@@ -37,7 +37,7 @@ def create_summarize_agent() -> LlmAgent:
 
             Respond only the file path.
         """,
-        model=LiteLlm(model="openai/gpt-5-nano"),
+        model=Gemini(model="gemini-2.5-flash"),
         tools=[summarize_mcp_tool]
     )
 

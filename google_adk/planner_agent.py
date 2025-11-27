@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from google.adk.agents import LlmAgent
-from google.adk.models.lite_llm import LiteLlm
+from google.adk.models import Gemini
 from opik.integrations.adk import OpikTracer, track_adk_agent_recursive
 from pydantic import BaseModel, Field
 
@@ -28,7 +28,7 @@ def create_planner_agent() -> LlmAgent:
             You are a helpful research assistant. Your job is to help me find information about a topic.
             Output 1 terms to query for.
         """,
-        model=LiteLlm(model="openai/gpt-5-mini"),
+        model=Gemini(model="gemini-2.5-flash"),
         output_schema=WebSearchPlan,
         output_key="web_search_plan",
     )
