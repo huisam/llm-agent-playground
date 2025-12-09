@@ -1,21 +1,18 @@
 import asyncio
-import logging
 import os
 
 from agents import Agent, Runner, ModelSettings
 from agents.mcp import MCPServerStdioParams, MCPServerStdio
 from openai.types import Reasoning
 
-from configuration.configuration import configure_all
-
-logger = logging.getLogger(__name__)
+from config import Logger
 
 
 async def summarize(title: str, reports: list[str]) -> str:
     async with create_summarize_mcp_server() as server:
         agent = create_summarize_agent(server)
         result = await Runner.run(agent, f"title: {title}\n reports: " + "\n\n".join(reports))
-        logger.info(f"Result of the summarization: {result.final_output}")
+        Logger.info(f"Result of the summarization: {result.final_output}")
         return result.final_output
 
 
@@ -45,7 +42,6 @@ def create_summarize_agent(server: MCPServerStdio) -> Agent:
 
 
 if __name__ == '__main__':
-    configure_all()
     asyncio.run(
         summarize(
             title="Ai report",

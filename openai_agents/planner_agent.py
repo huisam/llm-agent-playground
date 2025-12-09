@@ -1,13 +1,10 @@
 import asyncio
-import logging
 
 from agents import Agent, Runner, ModelSettings
 from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
-from configuration.configuration import configure_all
-
-logger = logging.getLogger(__name__)
+from config import Logger
 
 
 class WebSearchItem(BaseModel):
@@ -36,10 +33,9 @@ async def plan(query: str) -> WebSearchPlan:
     agent = create_planner_agent()
     response = await Runner.run(agent, query)
     web_search_plan = response.final_output
-    logger.info(web_search_plan.model_dump_json())
+    Logger.info(web_search_plan.model_dump_json())
     return web_search_plan
 
 
 if __name__ == '__main__':
-    configure_all()
     asyncio.run(plan("Due to 2025 year, What is the best model for agentic AI frontier model?"))

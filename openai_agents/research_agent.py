@@ -7,7 +7,7 @@ from agents.mcp import MCPServerStdio, MCPServerStdioParams
 from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
-from configuration.configuration import configure_all
+from config import Logger
 
 logger = logging.getLogger(__name__)
 
@@ -41,10 +41,9 @@ async def research(query: str, feedback: str | None = None) -> ResearchReport:
     async with create_research_mcp_server() as server:
         agent = create_research_agent(server)
         result = await Runner.run(agent, f"query: {query}\n feedback: {feedback}", max_turns=3)
-        logger.info(result.final_output.model_dump_json())
+        Logger.info(result.final_output.model_dump_json())
         return result.final_output
 
 
 if __name__ == '__main__':
-    configure_all()
     asyncio.run(research("Due to 2025 year, What is the best model for agentic AI frontier model?"))
