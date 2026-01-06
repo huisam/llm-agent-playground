@@ -1,9 +1,11 @@
 import asyncio
 
 from agents import Agent, input_guardrail, RunContextWrapper, TResponseInputItem, \
-    GuardrailFunctionOutput, Runner, trace
+    GuardrailFunctionOutput, Runner, trace, OpenAIResponsesModel
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
+
+from openai_agents import OPENAI_ASYNC_CLIENT
 
 
 class ResearchWorkOutput(BaseModel):
@@ -39,7 +41,7 @@ async def main():
                     You are a helpful research assistant. Your job is to help me find information about a topic.
                     Output 1 terms to query for.
                 """,
-            model="gpt-4o-mini",
+            model=OpenAIResponsesModel(model="gpt-4o-mini", openai_client=OPENAI_ASYNC_CLIENT),
             input_guardrails=[research_guardrail]
         )
         await Runner.run(planner_agent, "What is my name?")

@@ -10,7 +10,7 @@ from mcp import StdioServerParameters
 from opik.integrations.adk import OpikTracer, track_adk_agent_recursive
 from pydantic import BaseModel, Field
 
-from config import Logger, configure_observability
+from config import configure_observability
 from google_adk.runner import run_agent
 
 logger = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ async def research(query: str, feedback: str | None = None) -> ResearchReport:
     async for event in run_agent(app_name="research", user_id="test_user", session_id="test_session", agent=agent,
                                  query=query):
         final_answer = event
-        Logger.info(final_answer)
+        logger.info(final_answer)
     await research_mcp_server_tool.close()
     return ResearchReport.model_validate_json(final_answer)
 

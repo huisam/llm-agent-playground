@@ -6,7 +6,7 @@ from google.adk.models import Gemini
 from opik.integrations.adk import OpikTracer, track_adk_agent_recursive
 from pydantic import BaseModel, Field
 
-from config import Logger, configure_observability
+from config import configure_observability
 from google_adk.runner import run_agent
 
 logger = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ async def plan(query: str) -> WebSearchPlan:
     async for event in run_agent(app_name="planner", user_id="test_user", session_id="test_session", agent=agent,
                                  query=query):
         final_answer = event
-        Logger.info(final_answer)
+        logger.info(final_answer)
     return WebSearchPlan.model_validate_json(final_answer)
 
 

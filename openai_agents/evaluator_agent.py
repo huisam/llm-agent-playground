@@ -1,12 +1,14 @@
 import asyncio
+import logging
 from typing import Optional
 
-from agents import Agent, Runner, ModelSettings
+from agents import Agent, Runner, ModelSettings, OpenAIResponsesModel
 from openai.types import Reasoning
 from pydantic import BaseModel
 
-from config import Logger
+from openai_agents import OPENAI_ASYNC_CLIENT
 
+logger = logging.getLogger(__name__)
 
 class EvaluateResult(BaseModel):
     passed: bool
@@ -28,7 +30,7 @@ def create_evaluate_agent() -> Agent:
             If the result is not passed give the feedback.
             """,
         output_type=EvaluateResult,
-        model="gpt-5-mini",
+        model=OpenAIResponsesModel(model="gpt-5-mini", openai_client=OPENAI_ASYNC_CLIENT),
         model_settings=ModelSettings(reasoning=Reasoning(effort="low")),
     )
 
@@ -36,7 +38,7 @@ def create_evaluate_agent() -> Agent:
 async def evaluate(markdown_report: str) -> EvaluateResult:
     agent = create_evaluate_agent()
     result = await Runner.run(agent, markdown_report)
-    Logger.info(result.final_output.model_dump_json())
+    logger.info(result.final_output.model_dump_json())
     return result.final_output
 
 

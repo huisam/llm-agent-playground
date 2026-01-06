@@ -1,10 +1,13 @@
 import asyncio
+import logging
 
-from agents import Agent, Runner, ModelSettings
+from agents import Agent, Runner, ModelSettings, OpenAIResponsesModel
 from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
-from config import Logger
+from openai_agents import OPENAI_ASYNC_CLIENT
+
+logger = logging.getLogger(__name__)
 
 
 class WebSearchItem(BaseModel):
@@ -23,7 +26,7 @@ def create_planner_agent() -> Agent:
             You are a helpful research assistant. Your job is to help me find information about a topic.
             Output 1 terms to query for.
         """,
-        model="gpt-5-mini",
+        model=OpenAIResponsesModel(model="gpt-5-mini", openai_client=OPENAI_ASYNC_CLIENT),
         model_settings=ModelSettings(reasoning=Reasoning(effort="high")),
         output_type=WebSearchPlan
     )
@@ -33,7 +36,7 @@ async def plan(query: str) -> WebSearchPlan:
     agent = create_planner_agent()
     response = await Runner.run(agent, query)
     web_search_plan = response.final_output
-    Logger.info(web_search_plan.model_dump_json())
+    logger.info(web_search_plan.model_dump_json())
     return web_search_plan
 
 

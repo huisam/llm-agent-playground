@@ -2,12 +2,12 @@ import asyncio
 import logging
 import os
 
-from agents import Agent, Runner, ModelSettings
+from agents import Agent, Runner, ModelSettings, OpenAIResponsesModel
 from agents.mcp import MCPServerStdio, MCPServerStdioParams
 from openai.types import Reasoning
 from pydantic import BaseModel, Field
 
-from config import Logger
+from openai_agents import OPENAI_ASYNC_CLIENT
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def create_research_agent(server: MCPServerStdio) -> Agent:
                 You are a senior researcher tasked with writing a cohesive report for a research query.
                 You will be provided original query, ann return the following data output.
                 """,
-        model="gpt-5-nano",
+        model=OpenAIResponsesModel(model="gpt-5-nano", openai_client=OPENAI_ASYNC_CLIENT),
         model_settings=ModelSettings(reasoning=Reasoning(effort="low")),
         mcp_servers=[server],
         output_type=ResearchReport,
@@ -41,7 +41,7 @@ async def research(query: str, feedback: str | None = None) -> ResearchReport:
     async with create_research_mcp_server() as server:
         agent = create_research_agent(server)
         result = await Runner.run(agent, f"query: {query}\n feedback: {feedback}", max_turns=3)
-        Logger.info(result.final_output.model_dump_json())
+        logger.info(result.final_output.model_dump_json())
         return result.final_output
 
 

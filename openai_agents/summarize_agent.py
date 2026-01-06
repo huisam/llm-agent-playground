@@ -1,18 +1,21 @@
 import asyncio
+import logging
 import os
 
-from agents import Agent, Runner, ModelSettings
+from agents import Agent, Runner, ModelSettings, OpenAIResponsesModel
 from agents.mcp import MCPServerStdioParams, MCPServerStdio
 from openai.types import Reasoning
 
-from config import Logger
+from openai_agents import OPENAI_ASYNC_CLIENT
+
+logger = logging.getLogger(__name__)
 
 
 async def summarize(title: str, reports: list[str]) -> str:
     async with create_summarize_mcp_server() as server:
         agent = create_summarize_agent(server)
         result = await Runner.run(agent, f"title: {title}\n reports: " + "\n\n".join(reports))
-        Logger.info(f"Result of the summarization: {result.final_output}")
+        logger.info(f"Result of the summarization: {result.final_output}")
         return result.final_output
 
 
@@ -35,7 +38,7 @@ def create_summarize_agent(server: MCPServerStdio) -> Agent:
             
             Respond only the file path.
         """,
-        model="gpt-5-nano",
+        model=OpenAIResponsesModel(model="gpt-5-nano", openai_client=OPENAI_ASYNC_CLIENT),
         model_settings=ModelSettings(reasoning=Reasoning(effort="medium")),
         mcp_servers=[server],
     )
